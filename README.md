@@ -1,58 +1,70 @@
 # Marketing Analytics Project
 
 ## Objective
+
 This project aims to centralize and analyze marketing data from various sources to identify the most effective marketing activities in terms of conversion. The analysis will help guide the marketing team in making data-driven decisions for future campaigns.
 
 ## Requirements
+
 - Python 3.8+
-- PostgreSQL
-- Jupyter Notebook
-- Mage (for data pipeline orchestration)
+- Docker and Docker Compose
 - Various Python libraries (see `requirements.txt`)
 
 ## Project Structure
-- `data/`: Contains raw, processed, and external data
+
+- `analytics/`: Django app for analytics models and views
+- `core/`: Django project settings and configuration
+- `marketing_pipelines/`: Mage data pipeline scripts
 - `notebooks/`: Jupyter notebooks for analysis and visualization
-- `src/`: Source code for data processing and feature engineering
-- `mage_pipelines/`: Mage data pipeline scripts
-- `config/`: Configuration files (e.g., database connection)
-- `tests/`: Unit tests for the project
+- `docker-compose.yml`: Docker Compose configuration
+- `Dockerfile`: Docker image definition
+- `manage.py`: Django management script
 - `requirements.txt`: Python dependencies
-- `environment.yml`: Conda environment file
 
 ## Setup
+
 1. Clone the repository
-2. Create a virtual environment:
+2. Make sure Docker and Docker Compose are installed on your system
+3. Build the Docker images:
    ```
-   conda env create -f environment.yml
+   docker-compose build
    ```
-   or
+4. Start the services:
    ```
-   python -m venv venv
-   source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
-   pip install -r requirements.txt
+   docker-compose up
    ```
-3. Set up the PostgreSQL database and update `config/database.ini` with your credentials
-4. Run the Mage pipeline to populate the database with data from various sources
-5. Start Jupyter Notebook and begin your analysis
+
+## Accessing Services
+
+- Django: http://localhost:8000
+- Jupyter Notebook: http://localhost:8888
+- Mage: http://localhost:6790
 
 ## Workflow
-1. Data Loading: Use the Mage pipeline to collect and centralize data
-2. Data Cleaning: Clean and preprocess the data in `02_data_cleaning.ipynb`
-3. Feature Engineering: Create relevant features in `03_feature_engineering.ipynb`
-4. Exploratory Data Analysis (EDA): Analyze the data in `04_exploratory_data_analysis.ipynb`
-5. Insights and Visualization: Generate insights and visualizations in `05_insights_and_visualization.ipynb`
 
-## Contributing
-Please follow PEP 8 style guidelines and write unit tests for new functionality.
-
-## License
-[Insert your chosen license here]
+1. **Data Loading**: Use the Mage pipeline to collect and centralize data
+2. **Data Analysis**: Use Jupyter Notebooks for data cleaning, feature engineering, and analysis
+3. **Django Integration**: Use Django models to store and retrieve processed data
 
 ## Django Setup
 
-1. Copy `core/settings_example.py` to `core/settings.py` and update with your settings.
-2. Copy `config/database_example.ini` to `config/database.ini` and update with your database credentials.
-3. Run migrations: `python manage.py migrate`
-4. Create a superuser: `python manage.py createsuperuser`
-5. Start the development server: `python manage.py runserver`
+1. Run migrations:
+   ```
+   docker-compose run web python manage.py migrate
+   ```
+2. Create a superuser:
+   ```
+   docker-compose run web python manage.py createsuperuser
+   ```
+
+## Contributing
+
+Please follow [PEP 8](https://www.python.org/dev/peps/pep-0008/) style guidelines and write unit tests for new functionality.
+
+## License
+
+[MIT License](LICENSE)
+
+## Contact
+
+For any queries, please contact [Your Name](mailto:your.email@example.com).

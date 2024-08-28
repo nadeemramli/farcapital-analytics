@@ -7,7 +7,19 @@ services:
       - .:/app
     environment:
       - DJANGO_SETTINGS_MODULE=core.settings
-    command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    command: >
+      sh -c "
+        while ! pg_isready -h db -p 5432 -U farcapital_analytics; do
+          echo 'Waiting for database...';
+          sleep 1;
+        done;
+        echo 'Database is ready!';
+        python manage.py migrate &&
+        python manage.py runserver 0.0.0.0:8000
+      "
+    depends_on:
+      db:
+        condition: service_healthy
 
   jupyter:
     build: .
@@ -24,3 +36,22 @@ services:
     volumes:
       - .:/app
     command: mage start .
+
+  db:
+    image: postgres:13
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=farcapital_analytics
+      - POSTGRES_USER=farcapital_analytics
+      - POSTGRES_PASSWORD=passwordbrother
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U farcapital_analytics"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
