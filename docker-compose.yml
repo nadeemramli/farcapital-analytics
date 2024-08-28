@@ -32,7 +32,7 @@ services:
   mage:
     build: .
     ports:
-      - "6790:6789"
+      - "6789:6789"
     volumes:
       - .:/app
     command: mage start .
